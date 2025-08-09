@@ -1,0 +1,145 @@
+:root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color: #0f0f0f;
+  background-color: #f6f6f6;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.container {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.menu-bar {
+  display: flex;
+  background-color: #f0f0f0;
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.menu > span {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.menu > span:hover {
+  background-color: #e0e0e0;
+}
+
+.menu-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  z-index: 1;
+  border-radius: 4px;
+  padding: 0.5rem;
+  flex-direction: column;
+}
+
+.menu:hover .menu-content {
+  display: flex;
+}
+
+.menu-content button {
+  padding: 0.5rem;
+  text-align: left;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.menu-content button:hover {
+  background-color: #f0f0f0;
+}
+
+.editor-container {
+  display: flex;
+  height: calc(100vh - 3rem);
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.editor, .preview {
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  overflow-y: auto;
+}
+
+.editor {
+  font-family: monospace;
+  resize: none;
+  background: #f8f8f8;
+}
+
+.preview {
+  background: white;
+}
+
+.preview h1, .preview h2, .preview h3 {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.3em;
+}
+
+.preview code {
+  background: #f6f8fa;
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  font-family: monospace;
+}
+
+.preview pre {
+  background: #f6f8fa;
+  padding: 1em;
+  border-radius: 3px;
+  overflow: auto;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color: #f6f6f6;
+    background-color: #2f2f2f;
+  }
+
+  .editor {
+    background: #1e1e1e;
+    color: #f8f8f8;
+    border-color: #444;
+  }
+
+  .preview {
+    background: #2f2f2f;
+    border-color: #444;
+  }
+
+  .preview h1, .preview h2, .preview h3 {
+    border-color: #444;
+  }
+
+  .preview code, .preview pre {
+    background: #1e1e1e;
+  }
+}
