@@ -1,5 +1,5 @@
 [package]
-name = "tauri-app"
+name = "blog-writer"
 version = "0.1.0"
 description = "博客创作者软件"
 authors = ["李艺<9830131@qq.com>"]

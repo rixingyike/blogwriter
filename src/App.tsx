@@ -36,7 +36,7 @@ function hello() {
 > 提示：使用斜杠(/)命令可以快速插入各种格式。
 
 祝你使用愉快！`);
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState<'light' | 'dark' | 'solarized'>('light');
 
   const saveFile = async () => {
     try {

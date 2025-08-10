@@ -14,7 +14,6 @@ interface MilkdownEditorProps {
 
 export const MilkdownEditor: FC<MilkdownEditorProps> = ({
   value = '# 欢迎使用 Milkdown\n\n这是一个示例段落，点击左侧可以看到菜单。\n\n## 二级标题\n\n再来一个段落。',
-  onChange,
   theme = 'light'
 }) => {
   useEditor((root) => {
