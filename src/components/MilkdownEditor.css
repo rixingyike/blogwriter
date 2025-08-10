@@ -1,0 +1,90 @@
+/* MilkdownEditor.css - 适配 Crepe 主题 */
+.milkdown {
+  border-radius: 8px;
+  min-height: 300px;
+  transition: all 0.3s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* 主题样式 - 适配 Crepe */
+.milkdown.light {
+  --milkdown-bg: #ffffff;
+  --milkdown-text: #333333;
+  --milkdown-border: #e0e0e0;
+  --milkdown-selection: rgba(66, 133, 244, 0.2);
+  --milkdown-tooltip: #ffffff;
+  --milkdown-tooltip-text: #333333;
+}
+
+.milkdown.dark {
+  --milkdown-bg: #1e1e1e;
+  --milkdown-text: #e0e0e0;
+  --milkdown-border: #444444;
+  --milkdown-selection: rgba(66, 133, 244, 0.3);
+  --milkdown-tooltip: #2d2d2d;
+  --milkdown-tooltip-text: #e0e0e0;
+}
+
+.milkdown.solarized {
+  --milkdown-bg: #fdf6e3;
+  --milkdown-text: #657b83;
+  --milkdown-border: #eee8d5;
+  --milkdown-selection: rgba(181, 137, 0, 0.2);
+  --milkdown-tooltip: #eee8d5;
+  --milkdown-tooltip-text: #657b83;
+}
+
+/* 自定义编辑器样式 */
+.milkdown .editor {
+  background-color: var(--milkdown-bg);
+  color: var(--milkdown-text);
+  border: 1px solid var(--milkdown-border);
+  border-radius: 8px;
+}
+
+.milkdown .editor .ProseMirror {
+  padding: 20px;
+  min-height: 300px;
+  outline: none;
+}
+
+/* 编辑器内容样式优化 */
+.milkdown .editor .ProseMirror p {
+  margin: 1em 0;
+  line-height: 1.6;
+}
+
+.milkdown .editor .ProseMirror h1,
+.milkdown .editor .ProseMirror h2,
+.milkdown .editor .ProseMirror h3,
+.milkdown .editor .ProseMirror h4,
+.milkdown .editor .ProseMirror h5,
+.milkdown .editor .ProseMirror h6 {
+  margin: 1.5em 0 0.5em;
+  line-height: 1.3;
+}
+
+.milkdown .editor .ProseMirror h1 {
+  font-size: 2em;
+}
+
+.milkdown .editor .ProseMirror h2 {
+  font-size: 1.75em;
+}
+
+.milkdown .editor .ProseMirror h3 {
+  font-size: 1.5em;
+}
+
+.milkdown .editor .ProseMirror blockquote {
+  border-left: 4px solid var(--milkdown-border);
+  margin: 1em 0;
+  padding-left: 1em;
+  color: var(--milkdown-text);
+  opacity: 0.8;
+}
+
+/* 选择文本样式 */
+.milkdown .editor .ProseMirror ::selection {
+  background-color: var(--milkdown-selection);
+}

@@ -1,0 +1,124 @@
+/* Milkdown编辑器特定样式 */
+.milkdown {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+/* 编辑器内容样式 */
+.milkdown h1, .milkdown h2, .milkdown h3, .milkdown h4, .milkdown h5, .milkdown h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.milkdown h1 {
+  font-size: 2em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.milkdown h2 {
+  font-size: 1.5em;
+  border-bottom: 1px solid #eaecef;
+  padding-bottom: 0.3em;
+}
+
+.milkdown h3 {
+  font-size: 1.25em;
+}
+
+.milkdown p {
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.milkdown code {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  padding: 0.2em 0.4em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(27, 31, 35, 0.05);
+  border-radius: 3px;
+}
+
+.milkdown pre {
+  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+}
+
+.milkdown blockquote {
+  padding: 0 1em;
+  color: #6a737d;
+  border-left: 0.25em solid #dfe2e5;
+  margin: 0 0 16px 0;
+}
+
+.milkdown ul, .milkdown ol {
+  padding-left: 2em;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
+
+.milkdown table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.milkdown table th, .milkdown table td {
+  padding: 6px 13px;
+  border: 1px solid #dfe2e5;
+}
+
+.milkdown table th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+}
+
+/* 主题样式 */
+.milkdown.dark code {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.milkdown.dark pre {
+  background-color: #2d2d2d;
+}
+
+.milkdown.dark blockquote {
+  border-left-color: #4a4a4a;
+  color: #a0a0a0;
+}
+
+.milkdown.dark table th {
+  background-color: #2d2d2d;
+}
+
+.milkdown.dark table th, .milkdown.dark table td {
+  border-color: #4a4a4a;
+}
+
+.milkdown.solarized code {
+  background-color: #eee8d5;
+}
+
+.milkdown.solarized pre {
+  background-color: #eee8d5;
+}
+
+.milkdown.solarized blockquote {
+  border-left-color: #93a1a1;
+  color: #657b83;
+}
+
+.milkdown.solarized table th {
+  background-color: #eee8d5;
+}
+
+.milkdown.solarized table th, .milkdown.solarized table td {
+  border-color: #93a1a1;
+}

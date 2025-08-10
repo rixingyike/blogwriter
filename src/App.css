@@ -14,12 +14,55 @@
   -webkit-text-size-adjust: 100%;
 }
 
+/* 全局样式重置 */
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* 主题应用到body */
+body.dark {
+  background-color: #2f2f2f;
+  color: #f6f6f6;
+}
+
+body.solarized {
+  background-color: #fdf6e3;
+  color: #657b83;
+}
+
 .container {
   margin: 0;
   padding: 0;
   height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+.container.dark {
+  background-color: #2f2f2f;
+  color: #f6f6f6;
+}
+
+.container.dark .menu-bar {
+  background-color: #1e1e1e;
+  border-bottom-color: #444;
+}
+
+.container.dark .menu > span:hover {
+  background-color: #3e3e3e;
+}
+
+.container.dark .menu-content {
+  background-color: #2f2f2f;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.container.dark .menu-content button:hover {
+  background-color: #3e3e3e;
 }
 
 .menu-bar {
@@ -76,27 +119,88 @@
 .editor-container {
   display: flex;
   height: calc(100vh - 3rem);
-  gap: 1rem;
   padding: 1rem;
+  width: 100%;
 }
 
-.editor, .preview {
-  flex: 1;
+.editor-container {
+  display: flex;
+  height: calc(100vh - 3rem);
   padding: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Crepe 编辑器容器样式 */
+.milkdown {
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--milkdown-border);
+  border-radius: 8px;
   overflow-y: auto;
+  background: var(--milkdown-bg);
+  position: relative;
+  padding: 16px;
 }
 
-.editor {
-  font-family: monospace;
-  resize: none;
-  background: #f8f8f8;
+.editor-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #666;
+  background-color: rgba(255, 255, 255, 0.8);
 }
 
-.preview {
-  background: white;
+.editor-error {
+  padding: 20px;
+  color: #d32f2f;
+  background-color: #ffebee;
+  border: 1px solid #ffcdd2;
+  border-radius: 4px;
+  margin: 10px 0;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* Milkdown编辑器样式 - 使用 Crepe 主题 */
+.milkdown {
+  height: 100%;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* 主题样式 */
+.milkdown.light {
+  --milkdown-bg: white;
+  --milkdown-text: #333;
+  --milkdown-border: #e0e0e0;
+  --milkdown-selection: rgba(66, 133, 244, 0.2);
+  --milkdown-tooltip: #ffffff;
+  --milkdown-tooltip-text: #333333;
+}
+
+.milkdown.dark {
+  --milkdown-bg: #1e1e1e;
+  --milkdown-text: #eee;
+  --milkdown-border: #444;
+  --milkdown-selection: rgba(66, 133, 244, 0.3);
+  --milkdown-tooltip: #2d2d2d;
+  --milkdown-tooltip-text: #e0e0e0;
+}
+
+.milkdown.solarized {
+  --milkdown-bg: #fdf6e3;
+  --milkdown-text: #657b83;
+  --milkdown-border: #eee8d5;
+  --milkdown-selection: rgba(181, 137, 0, 0.2);
+  --milkdown-tooltip: #eee8d5;
+  --milkdown-tooltip-text: #657b83;
 }
 
 .preview h1, .preview h2, .preview h3 {
