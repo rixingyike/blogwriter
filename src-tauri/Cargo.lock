@@ -3733,6 +3733,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-dialog",
  "tauri-plugin-opener",
+ "tauri-winres",
 ]
 
 [[package]]

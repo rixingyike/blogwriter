@@ -27,7 +27,7 @@ pnpm icons
 
 - 在codebuddy的帮助下，建立了tauri+marked的PC桌面软件项目，可以使用pnpm tauri dev运行。
 - 加菜单栏。入库，开始记录。
-- 添加自动图标生成功能，使用 src/assets/blogwriter_logo.png 生成所有所需图标。
+- 添加自动图标生成功能，使用 app-icon.png 生成所有所需图标。
 - 解决Windows平台下图标显示问题：
   - 修复了Tauri 2.0中资源编译冲突问题
   - 解决了Windows SDK依赖问题（RC.EXE资源编译器）

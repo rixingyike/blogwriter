@@ -9,7 +9,12 @@ function App() {
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
-    setHtml(marked.parse(markdown));
+    const parsedHtml = marked.parse(markdown);
+    if (typeof parsedHtml === 'string') {
+      setHtml(parsedHtml);
+    } else {
+      parsedHtml.then(result => setHtml(result));
+    }
   }, [markdown]);
 
   const formatText = (prefix: string, suffix: string, placeholder = '') => {

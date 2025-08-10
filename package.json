@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "tauri": "tauri"
+    "tauri": "tauri",
+    "tauri:icons": "node scripts/tauri-icon-generator.js",
+    "fix:icon": "node scripts/fix-icon-format.js"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
@@ -22,6 +24,9 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "png2icons": "^2.0.1",
+    "sharp": "^0.34.3",
+    "to-ico": "^1.1.5",
     "typescript": "~5.8.3",
     "vite": "^7.0.4"
   }

@@ -26,3 +26,5 @@ build/
 
 # Local development files
 *.local
+
+# Icon generation files
