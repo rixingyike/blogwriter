@@ -1,9 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import "./App.css";
 import { invoke } from "@tauri-apps/api/core";
 import { MilkdownEditor } from "./components/MilkdownEditor";
 import DefaultContent from "./DefaultContent";
-import { Editor } from '@milkdown/react';
+import { Editor, useInstance } from '@milkdown/react';
+import { callCommand } from '@milkdown/kit/utils';
+import * as commands from '@milkdown/kit/preset/commonmark';
+import { Ctx } from '@milkdown/kit/ctx';
 
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'solarized'>('light');
@@ -13,38 +16,50 @@ export default function App() {
   const [fileMenuOpen, setFileMenuOpen] = useState(false);
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
   const [formatMenuOpen, setFormatMenuOpen] = useState(false);
-  
+
   // 保存编辑器实例的引用
   const editorRef = useRef<Editor | null>(null);
+
+  // 使用 useInstance 钩子获取编辑器实例
+  const [loading, get] = useInstance();
+
+  // 创建 action 函数，参考 Tooltip.tsx 的实现
+  const action = useCallback((fn: (ctx: Ctx) => void) => {
+    if (loading) return;
+    get().action(fn);
+  }, [loading, get]);
 
   // 格式菜单功能
   const applyFormat = (format: string) => {
     console.log(`应用格式: ${format}`);
-    
-    if (!editorRef.current) {
-      console.error('编辑器实例未初始化');
+
+    if (loading) {
+      console.error('编辑器实例未初始化或正在加载');
       return;
     }
-    
+
     // 使用 Milkdown 的命令系统
     switch (format) {
       case 'bold':
-        // 使用 setMarkdown 方法插入加粗文本
-        setMarkdown(`${markdown} **加粗文本** `);
+        // 使用 callCommand 调用加粗命令
+        action(callCommand(commands.toggleStrongCommand.key));
         break;
       case 'italic':
-        // 使用 setMarkdown 方法插入斜体文本
-        setMarkdown(`${markdown} *斜体文本* `);
+        // 使用 callCommand 调用斜体命令
+        action(callCommand(commands.toggleEmphasisCommand.key));
         break;
       case 'code':
-        // 使用 setMarkdown 方法插入代码文本
-        setMarkdown(`${markdown} \`代码\` `);
+        // 使用 callCommand 调用代码命令
+        action(callCommand(commands.toggleCodeCommand.key));
         break;
       case 'link':
         // 简单实现，实际应该弹出对话框让用户输入URL
         const url = prompt('请输入链接地址:', 'https://');
         if (url) {
-          setMarkdown(`${markdown} [链接文本](${url}) `);
+          action((ctx) => {
+            const { insert } = ctx;
+            return insert(`[链接文本](${url})`);
+          });
         }
         break;
       case 'image':
@@ -52,24 +67,36 @@ export default function App() {
         const imageUrl = prompt('请输入图片地址:', 'https://');
         if (imageUrl) {
           const alt = prompt('请输入图片描述:', '') || '图片';
-          setMarkdown(`${markdown} ![${alt}](${imageUrl}) `);
+          action((ctx) => {
+            const { insert } = ctx;
+            return insert(`![${alt}](${imageUrl})`);
+          });
         }
         break;
       case 'strikethrough':
-        // 使用 setMarkdown 方法插入删除线文本
-        setMarkdown(`${markdown} ~~删除线文本~~ `);
+        // 使用 action 插入删除线文本
+        action(callCommand(commands.toggleEmphasisCommand.key));
         break;
       case 'highlight':
-        // 使用 setMarkdown 方法插入高亮文本
-        setMarkdown(`${markdown} ==高亮文本== `);
+        // 使用 action 插入高亮文本
+        action((ctx) => {
+          const { insert } = ctx;
+          return insert('==高亮文本==');
+        });
         break;
       case 'underline':
-        // 使用 setMarkdown 方法插入下划线文本
-        setMarkdown(`${markdown} <u>下划线文本</u> `);
+        // 使用 action 插入下划线文本
+        action((ctx) => {
+          const { insert } = ctx;
+          return insert('<u>下划线文本</u>');
+        });
         break;
       case 'comment':
-        // 使用 setMarkdown 方法插入注释
-        setMarkdown(`${markdown} <!-- 注释内容 --> `);
+        // 使用 action 插入注释
+        action((ctx) => {
+          const { insert } = ctx;
+          return insert('<!-- 注释内容 -->');
+        });
         break;
       case 'openLink':
         console.log('打开链接功能需要实现');
@@ -130,8 +157,8 @@ export default function App() {
     <main className={`container ${theme}`}>
       <div className="menu-bar">
         {/* 文件菜单 */}
-        <div 
-          className="file-menu" 
+        <div
+          className="file-menu"
           onMouseEnter={() => setFileMenuOpen(true)}
           onMouseLeave={() => setFileMenuOpen(false)}
         >
@@ -145,8 +172,8 @@ export default function App() {
         </div>
 
         {/* 格式菜单 */}
-        <div 
-          className="format-menu" 
+        <div
+          className="format-menu"
           onMouseEnter={() => setFormatMenuOpen(true)}
           onMouseLeave={() => setFormatMenuOpen(false)}
         >
@@ -173,8 +200,8 @@ export default function App() {
         </div>
 
         {/* 主题菜单 */}
-        <div 
-          className="theme-menu" 
+        <div
+          className="theme-menu"
           onMouseEnter={() => setThemeMenuOpen(true)}
           onMouseLeave={() => setThemeMenuOpen(false)}
         >
@@ -190,13 +217,13 @@ export default function App() {
       </div>
 
       <div className="editor-container">
-        <MilkdownEditor 
+        <MilkdownEditor
           key={theme}
-          value={markdown} 
+          value={markdown}
           onChange={(value) => {
             console.log('编辑器内容更新', value.substring(0, 20) + '...');
             setMarkdown(value);
-          }} 
+          }}
           theme={theme}
           onEditorReady={(editor) => {
             editorRef.current = editor;
