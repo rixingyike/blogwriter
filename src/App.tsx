@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./App.css";
 import { invoke } from "@tauri-apps/api/core";
 import { MilkdownEditor } from "./components/MilkdownEditor";
 import DefaultContent from "./DefaultContent";
+import { Editor } from '@milkdown/react';
 
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'solarized'>('light');
@@ -12,23 +13,75 @@ export default function App() {
   const [fileMenuOpen, setFileMenuOpen] = useState(false);
   const [themeMenuOpen, setThemeMenuOpen] = useState(false);
   const [formatMenuOpen, setFormatMenuOpen] = useState(false);
+  
+  // 保存编辑器实例的引用
+  const editorRef = useRef<Editor | null>(null);
 
   // 格式菜单功能
   const applyFormat = (format: string) => {
+    console.log(`应用格式: ${format}`);
+    
+    if (!editorRef.current) {
+      console.error('编辑器实例未初始化');
+      return;
+    }
+    
+    // 使用 Milkdown 的命令系统
     switch (format) {
       case 'bold':
-        setMarkdown(`${markdown} **bold text** `);
+        // 使用 setMarkdown 方法插入加粗文本
+        setMarkdown(`${markdown} **加粗文本** `);
         break;
       case 'italic':
-        setMarkdown(`${markdown} *italic text* `);
+        // 使用 setMarkdown 方法插入斜体文本
+        setMarkdown(`${markdown} *斜体文本* `);
         break;
       case 'code':
-        setMarkdown(`${markdown} \`code\` `);
+        // 使用 setMarkdown 方法插入代码文本
+        setMarkdown(`${markdown} \`代码\` `);
         break;
       case 'link':
-        setMarkdown(`${markdown} [link text](url) `);
+        // 简单实现，实际应该弹出对话框让用户输入URL
+        const url = prompt('请输入链接地址:', 'https://');
+        if (url) {
+          setMarkdown(`${markdown} [链接文本](${url}) `);
+        }
+        break;
+      case 'image':
+        // 简单实现，实际应该弹出对话框让用户输入图片URL和描述
+        const imageUrl = prompt('请输入图片地址:', 'https://');
+        if (imageUrl) {
+          const alt = prompt('请输入图片描述:', '') || '图片';
+          setMarkdown(`${markdown} ![${alt}](${imageUrl}) `);
+        }
+        break;
+      case 'strikethrough':
+        // 使用 setMarkdown 方法插入删除线文本
+        setMarkdown(`${markdown} ~~删除线文本~~ `);
+        break;
+      case 'highlight':
+        // 使用 setMarkdown 方法插入高亮文本
+        setMarkdown(`${markdown} ==高亮文本== `);
+        break;
+      case 'underline':
+        // 使用 setMarkdown 方法插入下划线文本
+        setMarkdown(`${markdown} <u>下划线文本</u> `);
+        break;
+      case 'comment':
+        // 使用 setMarkdown 方法插入注释
+        setMarkdown(`${markdown} <!-- 注释内容 --> `);
+        break;
+      case 'openLink':
+        console.log('打开链接功能需要实现');
+        break;
+      case 'copyLink':
+        console.log('复制链接地址功能需要实现');
+        break;
+      case 'clearFormat':
+        console.log('清除样式功能需要实现');
         break;
       default:
+        console.log(`未知格式: ${format}`);
         break;
     }
   };
@@ -55,18 +108,18 @@ export default function App() {
   };
 
   // 格式菜单功能
-  const handleBold = () => console.log('加粗');
-  const handleItalic = () => console.log('斜体');
-  const handleUnderline = () => console.log('下划线');
-  const handleCode = () => console.log('代码');
-  const handleStrikethrough = () => console.log('删除线');
-  const handleHighlight = () => console.log('高亮');
-  const handleComment = () => console.log('注释');
-  const handleLink = () => console.log('超链接');
-  const handleOpenLink = () => console.log('打开链接');
-  const handleCopyLink = () => console.log('复制链接地址');
-  const handleImage = () => console.log('图像');
-  const handleClearFormat = () => console.log('清除样式');
+  const handleBold = () => applyFormat('bold');
+  const handleItalic = () => applyFormat('italic');
+  const handleUnderline = () => applyFormat('underline');
+  const handleCode = () => applyFormat('code');
+  const handleStrikethrough = () => applyFormat('strikethrough');
+  const handleHighlight = () => applyFormat('highlight');
+  const handleComment = () => applyFormat('comment');
+  const handleLink = () => applyFormat('link');
+  const handleOpenLink = () => applyFormat('openLink');
+  const handleCopyLink = () => applyFormat('copyLink');
+  const handleImage = () => applyFormat('image');
+  const handleClearFormat = () => applyFormat('clearFormat');
 
   // 确保主题在组件挂载后立即应用
   useEffect(() => {
@@ -145,6 +198,10 @@ export default function App() {
             setMarkdown(value);
           }} 
           theme={theme}
+          onEditorReady={(editor) => {
+            editorRef.current = editor;
+            console.log('编辑器实例已准备就绪');
+          }}
         />
       </div>
     </main>
