@@ -1,43 +1,39 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-// 使用 Crepe 的样式，不需要导入 milkdown.css
 import { invoke } from "@tauri-apps/api/core";
 import { MilkdownEditor } from "./components/MilkdownEditor";
+import DefaultContent from "./DefaultContent";
 
-function App() {
-  console.log('App组件渲染');
-  const [markdown, setMarkdown] = useState(`# 我的Markdown笔记
-
-## 欢迎使用所见即所得编辑器
-
-这是一个**所见即所得**的Markdown编辑器，你可以：
-
-- 直接编辑文本
-- 使用*斜体*、**粗体**等格式
-- 创建列表和表格
-- 插入代码块
-
-### 代码示例
-
-\`\`\`javascript
-function hello() {
-  console.log("Hello, Markdown!");
-}
-\`\`\`
-
-### 表格示例
-
-| 功能 | 描述 |
-|------|------|
-| 实时预览 | 边写边看效果 |
-| 多种主题 | 支持浅色、深色和Solarized |
-| 文件操作 | 可以保存和打开文件 |
-
-> 提示：使用斜杠(/)命令可以快速插入各种格式。
-
-祝你使用愉快！`);
+export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'solarized'>('light');
+  console.log('App组件渲染');
 
+  const [markdown, setMarkdown] = useState(DefaultContent);
+  const [fileMenuOpen, setFileMenuOpen] = useState(false);
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
+  const [formatMenuOpen, setFormatMenuOpen] = useState(false);
+
+  // 格式菜单功能
+  const applyFormat = (format: string) => {
+    switch (format) {
+      case 'bold':
+        setMarkdown(`${markdown} **bold text** `);
+        break;
+      case 'italic':
+        setMarkdown(`${markdown} *italic text* `);
+        break;
+      case 'code':
+        setMarkdown(`${markdown} \`code\` `);
+        break;
+      case 'link':
+        setMarkdown(`${markdown} [link text](url) `);
+        break;
+      default:
+        break;
+    }
+  };
+
+  // 文件菜单功能
   const saveFile = async () => {
     try {
       await invoke('save_file', { content: markdown });
@@ -58,6 +54,20 @@ function hello() {
     }
   };
 
+  // 格式菜单功能
+  const handleBold = () => console.log('加粗');
+  const handleItalic = () => console.log('斜体');
+  const handleUnderline = () => console.log('下划线');
+  const handleCode = () => console.log('代码');
+  const handleStrikethrough = () => console.log('删除线');
+  const handleHighlight = () => console.log('高亮');
+  const handleComment = () => console.log('注释');
+  const handleLink = () => console.log('超链接');
+  const handleOpenLink = () => console.log('打开链接');
+  const handleCopyLink = () => console.log('复制链接地址');
+  const handleImage = () => console.log('图像');
+  const handleClearFormat = () => console.log('清除样式');
+
   // 确保主题在组件挂载后立即应用
   useEffect(() => {
     document.body.className = theme;
@@ -66,26 +76,69 @@ function hello() {
   return (
     <main className={`container ${theme}`}>
       <div className="menu-bar">
-        <div className="menu">
-          <span>文件</span>
-          <div className="menu-content">
-            <button onClick={openFile}>打开</button>
-            <button onClick={saveFile}>保存</button>
-          </div>
+        {/* 文件菜单 */}
+        <div 
+          className="file-menu" 
+          onMouseEnter={() => setFileMenuOpen(true)}
+          onMouseLeave={() => setFileMenuOpen(false)}
+        >
+          <button className="menu-button">文件</button>
+          {fileMenuOpen && (
+            <div className="menu-dropdown">
+              <button onClick={saveFile}>保存</button>
+              <button onClick={openFile}>打开</button>
+            </div>
+          )}
         </div>
-        <div className="menu">
-          <span>主题</span>
-          <div className="menu-content">
-            <button onClick={() => setTheme('light')}>浅色</button>
-            <button onClick={() => setTheme('dark')}>深色</button>
-            <button onClick={() => setTheme('solarized')}>Solarized</button>
-          </div>
+
+        {/* 格式菜单 */}
+        <div 
+          className="format-menu" 
+          onMouseEnter={() => setFormatMenuOpen(true)}
+          onMouseLeave={() => setFormatMenuOpen(false)}
+        >
+          <button className="menu-button">格式</button>
+          {formatMenuOpen && (
+            <div className="menu-dropdown">
+              <button onClick={handleBold}>加粗</button>
+              <button onClick={handleItalic}>斜体</button>
+              <button onClick={handleUnderline}>下划线</button>
+              <button onClick={handleCode}>代码</button>
+              <hr className="menu-divider" />
+              <button onClick={handleStrikethrough}>删除线</button>
+              <button onClick={handleHighlight}>高亮</button>
+              <button onClick={handleComment}>注释</button>
+              <hr className="menu-divider" />
+              <button onClick={handleLink}>超链接</button>
+              <button onClick={handleOpenLink}>打开链接</button>
+              <button onClick={handleCopyLink}>复制链接地址</button>
+              <button onClick={handleImage}>图像</button>
+              <hr className="menu-divider" />
+              <button onClick={handleClearFormat}>清除样式</button>
+            </div>
+          )}
+        </div>
+
+        {/* 主题菜单 */}
+        <div 
+          className="theme-menu" 
+          onMouseEnter={() => setThemeMenuOpen(true)}
+          onMouseLeave={() => setThemeMenuOpen(false)}
+        >
+          <button className="menu-button">主题</button>
+          {themeMenuOpen && (
+            <div className="menu-dropdown">
+              <button onClick={() => setTheme('light')}>浅色</button>
+              <button onClick={() => setTheme('dark')}>深色</button>
+              <button onClick={() => setTheme('solarized')}>Solarized</button>
+            </div>
+          )}
         </div>
       </div>
-      
+
       <div className="editor-container">
         <MilkdownEditor 
-          key={theme} // 添加key属性，确保主题变化时重新创建组件
+          key={theme}
           value={markdown} 
           onChange={(value) => {
             console.log('编辑器内容更新', value.substring(0, 20) + '...');
@@ -98,4 +151,3 @@ function hello() {
   );
 }
 
-export default App;

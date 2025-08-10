@@ -99,6 +99,70 @@ body.solarized {
   flex-direction: column;
 }
 
+/* Typora风格菜单样式 */
+.file-menu, .theme-menu, .format-menu {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-right: 10px;
+}
+
+.menu-button {
+  background: none;
+  border: none;
+  padding: 6px 12px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.menu-button:hover {
+  background: #f0f0f0;
+}
+
+.menu-dropdown {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  min-width: 160px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 8px 0;
+  z-index: 100;
+}
+
+.file-menu:hover .menu-dropdown,
+.theme-menu:hover .menu-dropdown,
+.format-menu:hover .menu-dropdown {
+  display: block;
+}
+
+.menu-dropdown button {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  text-align: left;
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.menu-dropdown button:hover {
+  background: #f5f5f5;
+}
+
+.menu-divider {
+  margin: 6px 0;
+  border: none;
+  border-top: 1px solid #e0e0e0;
+}
+
 .menu:hover .menu-content {
   display: flex;
 }
