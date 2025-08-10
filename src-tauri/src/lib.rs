@@ -6,6 +6,7 @@ use env_logger;
 use std::error::Error;
 use serde::Serialize;
 use std::time::UNIX_EPOCH;
+use tauri::Manager;
 
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
@@ -259,7 +260,18 @@ pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
+
         .invoke_handler(tauri::generate_handler![greet, save_file, open_file, check_file_exists, get_file_info, create_directory])
+        .setup(|app| {
+            let window = app.get_webview_window("main").unwrap();
+            #[cfg(target_os = "windows")]
+            {
+                // 在 Tauri 2.0 中，窗口装饰是通过 decorations 属性设置的
+                window.set_decorations(true).expect("Failed to set decorations");
+                // 在 Tauri 2.0 中，窗口阴影是自动处理的，不需要显式设置
+            }
+            Ok(())
+        })
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
