@@ -3,10 +3,11 @@ import "./App.css";
 import { invoke } from "@tauri-apps/api/core";
 import { MilkdownEditor } from "./components/MilkdownEditor";
 import DefaultContent from "./DefaultContent";
-import { Editor, useInstance } from '@milkdown/react';
+import { useInstance } from '@milkdown/react';
 import { callCommand } from '@milkdown/kit/utils';
 import * as commands from '@milkdown/kit/preset/commonmark';
 import { Ctx } from '@milkdown/kit/ctx';
+import { toggleStrikethroughCommand } from '@milkdown/kit/preset/gfm';
 
 export default function App() {
   const [theme, setTheme] = useState<'light' | 'dark' | 'solarized'>('light');
@@ -14,17 +15,18 @@ export default function App() {
 
   const [markdown, setMarkdown] = useState(DefaultContent);
   const [fileMenuOpen, setFileMenuOpen] = useState(false);
-  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
   const [formatMenuOpen, setFormatMenuOpen] = useState(false);
+  const [themeMenuOpen, setThemeMenuOpen] = useState(false);
+  const [linkSubmenuOpen, setLinkSubmenuOpen] = useState(false);
 
   // 保存编辑器实例的引用
-  const editorRef = useRef<Editor | null>(null);
+  const editorRef = useRef<any>(null);
 
   // 使用 useInstance 钩子获取编辑器实例
   const [loading, get] = useInstance();
 
   // 创建 action 函数，参考 Tooltip.tsx 的实现
-  const action = useCallback((fn: (ctx: Ctx) => void) => {
+  const action = useCallback((fn: (ctx: any) => void) => {
     if (loading) return;
     get().action(fn);
   }, [loading, get]);
@@ -48,64 +50,45 @@ export default function App() {
         // 使用 callCommand 调用斜体命令
         action(callCommand(commands.toggleEmphasisCommand.key));
         break;
+      case 'underline':
+        // 下划线功能 - 暂时禁用
+        console.log('下划线功能暂时不可用');
+        break;
       case 'code':
-        // 使用 callCommand 调用代码命令
-        action(callCommand(commands.toggleCodeCommand.key));
-        break;
-      case 'link':
-        // 简单实现，实际应该弹出对话框让用户输入URL
-        const url = prompt('请输入链接地址:', 'https://');
-        if (url) {
-          action((ctx) => {
-            const { insert } = ctx;
-            return insert(`[链接文本](${url})`);
-          });
-        }
-        break;
-      case 'image':
-        // 简单实现，实际应该弹出对话框让用户输入图片URL和描述
-        const imageUrl = prompt('请输入图片地址:', 'https://');
-        if (imageUrl) {
-          const alt = prompt('请输入图片描述:', '') || '图片';
-          action((ctx) => {
-            const { insert } = ctx;
-            return insert(`![${alt}](${imageUrl})`);
-          });
-        }
+        // 使用 callCommand 调用行内代码命令
+        action(callCommand(commands.toggleInlineCodeCommand.key));
         break;
       case 'strikethrough':
-        // 使用 action 插入删除线文本
-        action(callCommand(commands.toggleEmphasisCommand.key));
+        // 删除线功能 - 使用 callCommand 调用删除线命令
+        action(callCommand(toggleStrikethroughCommand.key));
         break;
       case 'highlight':
-        // 使用 action 插入高亮文本
-        action((ctx) => {
-          const { insert } = ctx;
-          return insert('==高亮文本==');
-        });
-        break;
-      case 'underline':
-        // 使用 action 插入下划线文本
-        action((ctx) => {
-          const { insert } = ctx;
-          return insert('<u>下划线文本</u>');
-        });
+        // 高亮功能 - 暂时使用提示信息
+        console.log('高亮功能 - 需要进一步实现');
         break;
       case 'comment':
-        // 使用 action 插入注释
-        action((ctx) => {
-          const { insert } = ctx;
-          return insert('<!-- 注释内容 -->');
-        });
+        // 注释功能 - 暂时使用提示信息
+        console.log('注释功能 - 需要进一步实现');
+        break;
+      case 'link':
+        // 使用 callCommand 调用链接命令
+        action(callCommand(commands.toggleLinkCommand.key));
+        break;
+      case 'image':
+        // 图片功能 - 暂时使用提示信息
+        console.log('图片功能 - 需要进一步实现');
         break;
       case 'openLink':
-        console.log('打开链接功能需要实现');
+        // 打开当前选中的链接 - 简化实现
+        console.log('打开链接功能 - 需要选中链接文本');
         break;
       case 'copyLink':
-        console.log('复制链接地址功能需要实现');
+        // 复制当前选中链接的地址 - 简化实现
+        console.log('复制链接地址功能 - 需要选中链接文本');
         break;
       case 'clearFormat':
-        console.log('清除样式功能需要实现');
+        // 清除当前选中的格式 - 简化实现
+        console.log('清除格式功能 - 需要选中文本');
         break;
       default:
         console.log(`未知格式: ${format}`);
@@ -182,16 +165,25 @@ export default function App() {
             <div className="menu-dropdown">
               <button onClick={handleBold}>加粗</button>
               <button onClick={handleItalic}>斜体</button>
-              <button onClick={handleUnderline}>下划线</button>
               <button onClick={handleCode}>代码</button>
               <hr className="menu-divider" />
               <button onClick={handleStrikethrough}>删除线</button>
               <button onClick={handleHighlight}>高亮</button>
               <button onClick={handleComment}>注释</button>
               <hr className="menu-divider" />
-              <button onClick={handleLink}>超链接</button>
-              <button onClick={handleOpenLink}>打开链接</button>
-              <button onClick={handleCopyLink}>复制链接地址</button>
+              <div 
+                className="menu-item-with-submenu"
+                onMouseEnter={() => setLinkSubmenuOpen(true)}
+                onMouseLeave={() => setLinkSubmenuOpen(false)}
+              >
+                <button className="submenu-trigger">超链接</button>
+                {linkSubmenuOpen && (
+                  <div className="submenu">
+                    <button onClick={handleOpenLink}>打开链接</button>
+                    <button onClick={handleCopyLink}>复制链接地址</button>
+                  </div>
+                )}
+              </div>
               <button onClick={handleImage}>图像</button>
               <hr className="menu-divider" />
               <button onClick={handleClearFormat}>清除样式</button>
